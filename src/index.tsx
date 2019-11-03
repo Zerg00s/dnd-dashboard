@@ -1,61 +1,62 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import initialData from './initial-data';
-import { thisExpression } from '@babel/types';
-import { reaction, observable} from 'mobx';
-import { observer} from 'mobx-react';
-import { Store, Global } from './Stores/GlobalSingleton'
-import global from './Stores/GlobalSingleton'
-import Footer from './components/Footer';
-import Body from './components/Body';
+import Column from './column';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
 
-// class App extends React.Component {
-//     state = initialData;
-//     render() {
-//         return this.state.columnOrder.map( (columnId:string) => {
-//             const column = (this.state.columns as any)[columnId];
-
-//             const tasks = column.taskIds.map((taskId:string) => {
-//                 return (this.state.tasks as any)[taskId]}
-//             );
-
-//         });
-
-//         return <Column key={key=column.id} column={column} tasks={tasks} />
-//     }
-// }
-
-@observer
 class App extends React.Component {
+    state = initialData;
+
+    onDragEnd = (result: DropResult) => {
+        const { destination, source, draggableId } = result;
+        console.log(result);
+        if (!destination) {
+            return;
+        }
+
+        if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return;
+        }
+
+        const column = (this.state.columns as any)[source.droppableId];
+        const newTaskIds = Array.from(column.taskIds);
+        newTaskIds.splice(source.index, 1);
+        newTaskIds.splice(destination.index, 0, draggableId);
+
+        const newColumn = { ...column, taskIds: newTaskIds, };
+
+        const newState = {
+            ...this.state,
+            columns: {
+                ...this.state.columns, // spread is not important if we only have 1 column, but it's a good practice
+                [newColumn.id]: newColumn, // override the column
+            },
+        };
+
+        this.setState(newState);
+    }
+
     render() {
-       return  (
-        <React.Fragment>
-            <Header store={global.store} />
-            <Body />
-            <Footer store={global.store} />
-            
-        </React.Fragment>
-       )
+        return <DragDropContext
+            onDragEnd={this.onDragEnd}
+        >
+            {this.state.columnOrder.map((columnId: string) => {
+                const column = (this.state.columns as any)[columnId];
+
+                const tasks = column.taskIds.map((taskId: string) => {
+                    return (this.state.tasks as any)[taskId]
+                }
+                );
+
+                return <Column key={column.id} column={column} tasks={tasks} />
+            })
+            };
+        </DragDropContext>
+
     }
 }
-
-@observer
-class Header extends React.Component<Global> {
-    render() {
-       return  (
-        <React.Fragment>
-            <h1>Header: {this.props.store.counter}</h1>
-            <button type='button' onClick={this.iterate}> ++</button>
-        </React.Fragment>
-       )
-    }
-
-    iterate = ()=>{
-        this.props.store.counter++;
-    }
-}
-
-
-
 ReactDOM.render(<App />, document.getElementById('root'));

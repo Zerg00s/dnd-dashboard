@@ -10,7 +10,7 @@ class App extends React.Component {
 
     onDragEnd = (result: DropResult) => {
         const { destination, source, draggableId } = result;
-        console.log(result);
+       
         if (!destination) {
             return;
         }
@@ -22,20 +22,29 @@ class App extends React.Component {
             return;
         }
 
-        const column = (this.state.columns as any)[source.droppableId];
-        const newTaskIds = Array.from(column.taskIds);
-        newTaskIds.splice(source.index, 1);
-        newTaskIds.splice(destination.index, 0, draggableId);
+        console.log(result);
+        const sourceColumn = (this.state.columns as any)[source.droppableId];
+        const destinationColumn = (this.state.columns as any)[destination.droppableId];
 
-        const newColumn = { ...column, taskIds: newTaskIds, };
+        const newSourceTaskIds = Array.from(sourceColumn.taskIds);
+        newSourceTaskIds.splice(source.index, 1);
+
+        const newDestinationTaskIds = Array.from(destinationColumn.taskIds);
+        newDestinationTaskIds.splice(destination.index, 0, draggableId);
+
+        const newSourceColumn = { ...sourceColumn, taskIds: newSourceTaskIds, };
+        const newDestinationColumn = { ...destinationColumn, taskIds: newDestinationTaskIds, };
 
         const newState = {
             ...this.state,
             columns: {
                 ...this.state.columns, // spread is not important if we only have 1 column, but it's a good practice
-                [newColumn.id]: newColumn, // override the column
+                [newSourceColumn.id]: newSourceColumn, // override the column
+                [newDestinationColumn.id]: newDestinationColumn, // override the column
             },
         };
+
+        console.log(newState);
 
         this.setState(newState);
     }

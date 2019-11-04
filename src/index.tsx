@@ -9,7 +9,7 @@ import { PrimaryButton, IconButton } from "office-ui-fabric-react/lib/Button";
 import { ThemeGenerator } from "office-ui-fabric-react/lib/ThemeGenerator";
 import { getTheme, createTheme } from "office-ui-fabric-react/lib/Styling";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
-import { Icon } from 'office-ui-fabric-react/lib/Icon';
+import { Icon } from "office-ui-fabric-react/lib/Icon";
 
 initializeIcons(/* optional base url */);
 
@@ -64,30 +64,19 @@ class App extends React.Component {
   };
 
   public render() {
-    const iconsTheme = createTheme({
-      semanticColors: {
-        disabledBackground: "#ff9933",
-        bodyBackground: "#ff0000"
-      }
-    });
-
     return (
       <React.Fragment>
         <Fab
+          alwaysShowTitle={true}
           event="click"
           mainButtonStyles={{
             backgroundColor: "white",
             width: 36,
             height: 36,
             borderRadius: 23,
-            color: "white"
+            color: "black"
           }}
-          icon={
-            <IconButton
-              iconProps={{ iconName: "CollapseMenu" }}
-              theme={iconsTheme}
-            />
-          }
+          icon={<Icon iconName="CollapseMenu" />}
         >
           <Action
             text="Events"
@@ -111,7 +100,7 @@ class App extends React.Component {
               color: "blue"
             }}
           >
-            <IconButton iconProps={{ iconName: "Rocket" }} />
+           <Icon iconName="Rocket" />
           </Action>
         </Fab>
 

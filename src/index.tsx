@@ -14,7 +14,6 @@ class App extends React.Component {
         if (!destination) {
             return;
         }
-
         if (
             destination.droppableId === source.droppableId &&
             destination.index === source.index
@@ -23,19 +22,22 @@ class App extends React.Component {
         }
 
         console.log(result);
-        const sourceColumn = (this.state.columns as any)[source.droppableId];
-        const destinationColumn = (this.state.columns as any)[destination.droppableId];
+        let sourceColumn = (this.state.columns as any)[source.droppableId];
+        let destinationColumn = (this.state.columns as any)[destination.droppableId];
 
-        const newSourceTaskIds = Array.from(sourceColumn.taskIds);
+        let newSourceTaskIds = Array.from(sourceColumn.taskIds);
         newSourceTaskIds.splice(source.index, 1);
+        let newDestinationTaskIds = Array.from(destinationColumn.taskIds);
 
-        const newDestinationTaskIds = Array.from(destinationColumn.taskIds);
+        if(destination.droppableId === source.droppableId){
+            newDestinationTaskIds = newSourceTaskIds;
+        }
         newDestinationTaskIds.splice(destination.index, 0, draggableId);
 
-        const newSourceColumn = { ...sourceColumn, taskIds: newSourceTaskIds, };
-        const newDestinationColumn = { ...destinationColumn, taskIds: newDestinationTaskIds, };
+        let newSourceColumn = { ...sourceColumn, taskIds: newSourceTaskIds, };
+        let newDestinationColumn = { ...destinationColumn, taskIds: newDestinationTaskIds, };
 
-        const newState = {
+        let newState = {
             ...this.state,
             columns: {
                 ...this.state.columns, // spread is not important if we only have 1 column, but it's a good practice
@@ -45,11 +47,10 @@ class App extends React.Component {
         };
 
         console.log(newState);
-
         this.setState(newState);
     }
 
-    render() {
+    public render() {
         return <DragDropContext
             onDragEnd={this.onDragEnd}
         >
@@ -57,13 +58,13 @@ class App extends React.Component {
                 const column = (this.state.columns as any)[columnId];
 
                 const tasks = column.taskIds.map((taskId: string) => {
-                    return (this.state.tasks as any)[taskId]
+                    return (this.state.tasks as any)[taskId];
                 }
-                );
+                )
 
                 return <Column key={column.id} column={column} tasks={tasks} />
             })
-            };
+            }
         </DragDropContext>
 
     }

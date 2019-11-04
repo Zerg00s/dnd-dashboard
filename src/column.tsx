@@ -34,6 +34,6 @@ export default class Column extends React.Component<any> {
                     }
                 </Droppable>
             </Container>
-        );
+        )
     }
 }

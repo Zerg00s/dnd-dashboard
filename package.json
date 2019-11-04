@@ -9,10 +9,13 @@
     "@types/react-dom": "16.9.3",
     "mobx": "^5.14.2",
     "mobx-react": "^6.1.4",
+    "office-ui-fabric-react": "^7.56.3",
     "react": "^16.11.0",
     "react-beautiful-dnd": "^12.0.0",
     "react-dom": "^16.11.0",
+    "react-mfb": "^0.6.0",
     "react-scripts": "3.2.0",
+    "react-tiny-fab": "^3.0.3",
     "styled-components": "^4.4.1",
     "typescript": "3.6.4"
   },
